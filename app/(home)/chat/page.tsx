@@ -1,102 +1,61 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { SendHorizonal } from "lucide-react";
-import axios from "axios";
+import { useChat } from "@ai-sdk/react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
+import { ResizableChat } from "@/components/extra/resizeable-bar";
+export default function Home() {
+  const { messages, input, handleInputChange, handleSubmit, setInput } =
+    useChat();
+  const searchParams = useSearchParams();
+  const initialPrompt = searchParams.get("prompt");
+  const formRef = useRef<HTMLFormElement>(null); // reference to the form
 
-interface Message {
-  role: "user" | "ai";
-  content: string;
-}
+  // useEffect(() => {
 
-export default function ChatBot() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const handleSend = async () => {
-    if (!input.trim()) return;
-
-    setMessages((prev) => [...prev, { role: "user", content: input }]);
-
-    try {
-      const res = await axios.post("/api/text-ai", { input });
-      const output = res.data.output;
-
-      setMessages((prev) => [...prev, { role: "ai", content: output }]);
-    } catch (err) {
-      console.error("Failed to fetch response:", err);
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", content: " Error fetching response." },
-      ]);
-    }
-
-    setInput("");
-  };
-
-  useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  //   if (initialPrompt) {
+  //     setInput(initialPrompt);
+  //     handleSubmit();
+  //   }
+  // }, [initialPrompt]);
 
   return (
-    <div className="flex flex-col w-full max-w-4xl h-[90vh] mx-auto border rounded-xl overflow-hidden shadow-md mt-5">
-      {/* Make sure ScrollArea fills available space */}
-      <div className="flex-1 overflow-y-auto">
-        <ScrollArea className="h-full p-4 space-y-4 bg-background">
-          {messages.map((msg, idx) => (
-            <div
-              key={idx}
-              className={`flex items-start space-x-2 ${
-                msg.role === "user" ? "justify-end" : "justify-start"
-              }`}
-            >
-              {msg.role === "ai" && (
-                <Avatar>
-                  <AvatarImage src="/bot.png" />
-                  <AvatarFallback>AI</AvatarFallback>
-                </Avatar>
-              )}
-              <Card
-                className={`max-w-xs ${
-                  msg.role === "user"
-                    ? "bg-violet-200 dark:bg-violet-800"
-                    : "bg-muted"
-                }`}
-              >
-                <CardContent className="p-3 text-sm whitespace-pre-line">
-                  {msg.content}
-                </CardContent>
-              </Card>
-              {msg.role === "user" && (
-                <Avatar>
-                  <AvatarImage src="/user.png" />
-                  <AvatarFallback>U</AvatarFallback>
-                </Avatar>
-              )}
-            </div>
-          ))}
-          <div ref={scrollRef} />
-        </ScrollArea>
-      </div>
-
-      {/* Input area fixed at bottom */}
-      <div className="p-4 border-t flex items-center gap-2 bg-background">
-        <Input
-          placeholder="Write your story idea..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        />
-        <Button onClick={handleSend} className="p-2">
-          <SendHorizonal size={18} />
-        </Button>
-      </div>
+    // <div className="flex flex-col w-full   py-24 mx-auto  stretch">
+    //   <div className="flex-1 overflow-y-auto px-4 py-6">
+    //     {messages.map((message) => (
+    //       <div
+    //         key={message.id}
+    //         className={`flex w-full ${
+    //           message.role === "user" ? "justify-start" : "justify-end"
+    //         }`}
+    //       >
+    //         <div
+    //           className={`whitespace-pre-wrap p-3 my-1 rounded-lg max-w-sm ${
+    //             message.role === "user"
+    //               ? "bg-muted text-right rounded-full"
+    //               : ""
+    //           }`}
+    //         >
+    //           {message.parts.map((part, i) =>
+    //             part.type === "text" ? (
+    //               <div key={`${message.id}-${i}`}>{part.text}</div>
+    //             ) : null
+    //           )}
+    //         </div>
+    //       </div>
+    //     ))}
+    //   </div>
+    //   <form ref={formRef} onSubmit={handleSubmit}>
+    //     <input
+    //       className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-3xl p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl "
+    //       value={input}
+    //       placeholder="Say something..."
+    //       onChange={handleInputChange}
+    //     />
+    //   </form>
+    // </div>
+    <div className="h-screen">
+      <ResizableChat />
     </div>
   );
 }
