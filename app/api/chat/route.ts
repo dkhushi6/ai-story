@@ -6,9 +6,9 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { messages } = body;
 
-  const stream = streamText({
+  const result = streamText({
     model: openai("gpt-4.1"),
     messages,
   });
-  return stream.toDataStreamResponse();
+  return result.toDataStreamResponse();
 }

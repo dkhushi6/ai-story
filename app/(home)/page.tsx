@@ -1,34 +1,53 @@
 "use client";
-
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Hero from "@/components/hero";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
-  // const [prompt, setPrompt] = useState("");
-  // const router = useRouter();
-
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   if (prompt.trim()) {
-  //     router.push(`/chat?prompt=${encodeURIComponent(prompt)}`);
-  //   }
-  // };
-
+  const router = useRouter();
+  const [response, setResponse] = useState([]);
+  useEffect(() => {
+    const handleUserchats = async () => {
+      try {
+        const res = await axios.get("/api/fetch/fetch-chats");
+        if (!res) {
+          console.error("res not found ");
+        }
+        console.log(res.data);
+        setResponse(res.data.chats);
+      } catch (error) {
+        console.error("error fetching data", error);
+      }
+    };
+    handleUserchats();
+  }, []);
+  if (!response) {
+    return <p>loading</p>;
+  }
   return (
-    // <div className="flex items-center justify-center h-screen">
-    //   <form onSubmit={handleSubmit} className="flex gap-4 w-full max-w-xl">
-    //     <Input
-    //       placeholder="Enter your story idea..."
-    //       value={prompt}
-    //       onChange={(e) => setPrompt(e.target.value)}
-    //     />
-    //     <Button type="submit">Generate</Button>
-    //   </form>
-    // </div>
     <div>
-      <Hero />
+      <div>
+        <Button
+          onClick={() => {
+            router.push("/chat/new");
+          }}
+        >
+          New chat
+        </Button>
+      </div>
+      {response.length > 0 ? (
+        <div>
+          {response.map((chat: any) => (
+            <div key={chat._id}>
+              <div>CHAT-ID: {chat.Id}</div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>NO RECENT CHATS</p>
+      )}
     </div>
   );
 }
