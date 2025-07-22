@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     const chat = await Chat.create({
       _id: id,
       message,
+      userId,
     });
     return NextResponse.json({ status: "ok", chatId: chat._id });
   }

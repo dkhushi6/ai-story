@@ -8,12 +8,24 @@ import { use, useEffect, useState } from "react";
 
 export default function Chat({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const { messages, input, handleInputChange, handleSubmit } = useChat();
+  const [convo, setConvo] = useState([]);
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    initialMessages: convo,
+    onFinish: async (message) => {
+      if (!chatId) {
+        console.error("chatId missing");
+      }
+      const res = await axios.post("/api/fetch/save-chats", {
+        message,
+        id: chatId,
+      });
+    },
+  });
   const [chatId, setChatId] = useState<string | null>(null);
 
   //params id get n set
   useEffect(() => {
-    if (!id && id === "new") {
+    if (!id || id === "new") {
       setChatId(null);
 
       const idg = new ObjectId().toHexString();
@@ -21,16 +33,32 @@ export default function Chat({ params }: { params: Promise<{ id: string }> }) {
     } else {
       setChatId(id);
     }
+    const handleReload = async () => {
+      try {
+        const res = await axios.post("/api/fetch/fetch-chats", {
+          chatId,
+        });
+        console.log("Fetched:", res.data.chat?.message);
+        setConvo(res.data.chat?.message || []);
+      } catch (err) {
+        console.log("error fetching data", err);
+      }
+    };
+    if (id && id !== "new") {
+      handleReload();
+    }
   }, []);
+
   // saving chats
   const handleSubmitClick = async () => {
+    console.log(chatId);
     if (!chatId) {
       console.log("chatid is not set");
     }
     const userMsgFormate = {
       id: generateId(),
       role: "user",
-      content: "input",
+      content: input,
     };
     try {
       const res = await axios.post("/api/fetch/save-chats", {
