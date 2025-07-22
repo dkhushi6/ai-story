@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
   if (existingChat) {
     return NextResponse.json({ chat: existingChat || null });
   }
-  return NextResponse.json({ message: "esxisting chat not found" });
+  return NextResponse.json({ message: "existing chat not found" });
 }
 
 //fetch all chats of user

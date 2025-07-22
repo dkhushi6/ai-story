@@ -36,7 +36,7 @@ export default function Chat({ params }: { params: Promise<{ id: string }> }) {
     const handleReload = async () => {
       try {
         const res = await axios.post("/api/fetch/fetch-chats", {
-          chatId,
+          chatId: id,
         });
         console.log("Fetched:", res.data.chat?.message);
         setConvo(res.data.chat?.message || []);
@@ -47,7 +47,7 @@ export default function Chat({ params }: { params: Promise<{ id: string }> }) {
     if (id && id !== "new") {
       handleReload();
     }
-  }, []);
+  }, [id]);
 
   // saving chats
   const handleSubmitClick = async () => {
