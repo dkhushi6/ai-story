@@ -13,7 +13,8 @@ const Hero = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (prompt.trim()) {
-      router.push(`/chat/new?prompt=${encodeURIComponent(prompt)}`);
+      localStorage.setItem("prompt", prompt);
+      router.push("/chat/new");
     }
   };
 

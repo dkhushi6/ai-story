@@ -14,6 +14,7 @@ import axios from "axios";
 import { CoreMessage, generateId, Message } from "ai";
 import { useParams, useSearchParams } from "next/navigation";
 import { ObjectId } from "bson";
+import { Prompt } from "next/font/google";
 
 export function ResizableChat() {
   const [chatId, setChatId] = useState<string | null>(null);
@@ -66,8 +67,16 @@ export function ResizableChat() {
   }, [id]);
 
   useEffect(() => {
-    console.log("Updated messages:", messages);
-  }, [messages]);
+    const getPrompt = async () => {
+      const prompt = await localStorage.getItem("prompt");
+      console.log("input prompt:", prompt);
+      if (prompt) {
+        setInput(prompt);
+        handleSubmit();
+      }
+    };
+    getPrompt();
+  }, []);
 
   // useEffect(() => {
   //   if (initialPrompt) {
