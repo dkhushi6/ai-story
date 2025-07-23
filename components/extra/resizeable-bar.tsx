@@ -7,27 +7,101 @@ import {
 } from "@/components/ui/resizable";
 import { useChat } from "@ai-sdk/react";
 import { Send, SendHorizonal, UserRound } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-type PromptType = {
-  initialPrompt: string | null;
-};
-export function ResizableChat({ initialPrompt }: PromptType) {
+import axios from "axios";
+import { CoreMessage, generateId, Message } from "ai";
+import { useParams, useSearchParams } from "next/navigation";
+import { ObjectId } from "bson";
+
+export function ResizableChat() {
+  const [chatId, setChatId] = useState<string | null>(null);
+
+  const params = useParams();
+  const id = params.id as string;
+  const [convo, setConvo] = useState<Message[]>([]);
+  // const searchParams = useSearchParams();
+  // const initialPrompt = searchParams.get("prompt");
   const { messages, input, handleInputChange, handleSubmit, setInput } =
-    useChat();
+    useChat({
+      initialMessages: convo,
+      onFinish: async (message) => {
+        if (!chatId) {
+          console.error("chatId missing");
+        }
+        const res = await axios.post("/api/fetch/save-chats", {
+          message,
+          id: chatId,
+        });
+      },
+    });
+  //params id get n set
+  useEffect(() => {
+    if (!id || id === "new") {
+      const idg = new ObjectId().toHexString();
+      setChatId(idg);
+
+      console.log("Generated new chatId:", idg);
+    } else {
+      setChatId(id);
+    }
+
+    const handleReload = async () => {
+      try {
+        const res = await axios.post("/api/fetch/fetch-chats", {
+          chatId: id,
+        });
+        console.log("Fetched:", res.data.chat?.message);
+        setConvo(res.data.chat?.message || []);
+      } catch (err) {
+        console.log("error fetching data", err);
+        setConvo([]); // fallback
+      }
+    };
+
+    if (id && id !== "new") {
+      handleReload();
+    }
+  }, [id]);
 
   useEffect(() => {
     console.log("Updated messages:", messages);
   }, [messages]);
 
-  useEffect(() => {
-    if (initialPrompt) {
-      setInput(initialPrompt);
-      handleSubmit();
-    }
-  }, [initialPrompt]);
+  // useEffect(() => {
+  //   if (initialPrompt) {
+  //     setInput(initialPrompt);
+  //     handleSubmit();
+  //   }
+  // }, [initialPrompt]);
 
+  // saving chats
+  const handleSubmitClick = async () => {
+    console.log(chatId);
+    if (!chatId) {
+      console.log("chatid is not set");
+    }
+    const userMsgFormate = {
+      id: generateId(),
+      role: "user",
+      content: input,
+    };
+    try {
+      const res = await axios.post("/api/fetch/save-chats", {
+        message: userMsgFormate,
+        id: chatId,
+      });
+
+      handleSubmit();
+
+      if (typeof window !== "undefined" && chatId) {
+        window.history.replaceState({}, "", `/chat/${chatId}`);
+      }
+    } catch (err) {
+      console.log("error fetching data", err);
+    }
+  };
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -67,10 +141,7 @@ export function ResizableChat({ initialPrompt }: PromptType) {
           </div>
 
           {/* Sticky Input at Bottom */}
-          <form
-            onSubmit={handleSubmit}
-            className="sticky bottom-0  p-4 border-t bg-muted rounded-2xl border-muted mb-19    "
-          >
+          <form className="sticky bottom-0  p-4 border-t bg-muted rounded-2xl border-muted mb-19    ">
             <div className="flex items-center gap-2 px-4 py-2 ">
               <input
                 type="text"
@@ -78,6 +149,11 @@ export function ResizableChat({ initialPrompt }: PromptType) {
                 onChange={handleInputChange}
                 placeholder="Say something..."
                 className="flex-1 py-2 px-3 bg-transparent text-foreground placeholder-muted-foreground focus:outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    handleSubmitClick();
+                  }
+                }}
               />
 
               <button

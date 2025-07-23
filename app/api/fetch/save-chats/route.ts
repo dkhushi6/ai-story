@@ -26,6 +26,10 @@ export async function POST(req: NextRequest) {
       _id: id,
       message,
       userId,
+      name:
+        message?.role === "user"
+          ? message.content.slice(0, 60)
+          : "Untitled Chat",
     });
     return NextResponse.json({ status: "ok", chatId: chat._id });
   }

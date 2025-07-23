@@ -13,7 +13,7 @@ const Hero = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (prompt.trim()) {
-      router.push(`/chat?prompt=${encodeURIComponent(prompt)}`);
+      router.push(`/chat/new?prompt=${encodeURIComponent(prompt)}`);
     }
   };
 
@@ -54,7 +54,7 @@ const Hero = () => {
         {/* Suggested Themes */}
         <div className="mt-16">
           <h2 className="text-xl text-zinc-700 dark:text-zinc-300 mb-6 font-medium">
-            Or choose a popular theme:
+            Or choose a popular Titles:
           </h2>
           <div className="flex flex-wrap justify-center gap-3">
             {[

@@ -1,38 +1,32 @@
 "use client";
 
+import { ResizableChat } from "@/components/extra/resizeable-bar";
 import { useChat } from "@ai-sdk/react";
 import { generateId } from "ai";
 import axios from "axios";
 import { ObjectId } from "bson";
+import { useParams, useSearchParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
 
-export default function Chat({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const [convo, setConvo] = useState([]);
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
-    initialMessages: convo,
-    onFinish: async (message) => {
-      if (!chatId) {
-        console.error("chatId missing");
-      }
-      const res = await axios.post("/api/fetch/save-chats", {
-        message,
-        id: chatId,
-      });
-    },
-  });
+export default function Chat() {
+  const params = useParams();
+  const id = params.id as string;
+  const [convo, setConvo] = useState<any[] | null>(null);
+  const searchParams = useSearchParams();
+  const initialPrompt = searchParams.get("prompt");
   const [chatId, setChatId] = useState<string | null>(null);
 
   //params id get n set
   useEffect(() => {
     if (!id || id === "new") {
-      setChatId(null);
-
       const idg = new ObjectId().toHexString();
       setChatId(idg);
+
+      console.log("Generated new chatId:", idg);
     } else {
       setChatId(id);
     }
+
     const handleReload = async () => {
       try {
         const res = await axios.post("/api/fetch/fetch-chats", {
@@ -42,65 +36,47 @@ export default function Chat({ params }: { params: Promise<{ id: string }> }) {
         setConvo(res.data.chat?.message || []);
       } catch (err) {
         console.log("error fetching data", err);
+        setConvo([]); // fallback
       }
     };
+
     if (id && id !== "new") {
       handleReload();
     }
   }, [id]);
 
   // saving chats
-  const handleSubmitClick = async () => {
-    console.log(chatId);
-    if (!chatId) {
-      console.log("chatid is not set");
-    }
-    const userMsgFormate = {
-      id: generateId(),
-      role: "user",
-      content: input,
-    };
-    try {
-      const res = await axios.post("/api/fetch/save-chats", {
-        message: userMsgFormate,
-        id: chatId,
-      });
+  // const handleSubmitClick = async () => {
+  //   console.log(chatId);
+  //   if (!chatId) {
+  //     console.log("chatid is not set");
+  //   }
+  //   const userMsgFormate = {
+  //     id: generateId(),
+  //     role: "user",
+  //     content: input,
+  //   };
+  //   try {
+  //     const res = await axios.post("/api/fetch/save-chats", {
+  //       message: userMsgFormate,
+  //       id: chatId,
+  //     });
 
-      handleSubmit();
+  //     handleSubmit();
 
-      if (typeof window !== "undefined" && chatId) {
-        window.history.replaceState({}, "", `/chat/${chatId}`);
-      }
-    } catch (err) {
-      console.log("error fetching data", err);
-    }
-  };
+  //     if (typeof window !== "undefined" && chatId) {
+  //       window.history.replaceState({}, "", `/chat/${chatId}`);
+  //     }
+  //   } catch (err) {
+  //     console.log("error fetching data", err);
+  //   }
+  // };
+  if (!chatId) {
+    return <div className="p-6 text-muted-foreground">Loading chat...</div>;
+  }
   return (
-    <div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
-      <div>chatID:{chatId}</div>
-      {messages.map((message) => (
-        <div key={message.id} className="whitespace-pre-wrap">
-          {message.role === "user" ? "User: " : "AI: "}
-          {message.parts.map((part, i) => {
-            switch (part.type) {
-              case "text":
-                return <div key={`${message.id}-${i}`}>{part.text}</div>;
-            }
-          })}
-        </div>
-      ))}
-
-      <input
-        className="fixed dark:bg-zinc-900 bottom-0 w-full max-w-md p-2 mb-8 border border-zinc-300 dark:border-zinc-800 rounded shadow-xl"
-        value={input}
-        placeholder="Say something..."
-        onChange={handleInputChange}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            handleSubmitClick();
-          }
-        }}
-      />
+    <div className="h-screen">
+      <ResizableChat />
     </div>
   );
 }
