@@ -50,3 +50,26 @@ export async function GET(req: NextRequest) {
     chats: userChats,
   });
 }
+
+//clear all user chats
+export async function DELETE() {
+  await connectDB();
+  const session = await auth();
+  if (!session?.user?.id) {
+    return NextResponse.json({
+      message: "Login first",
+    });
+  }
+  const userId = session.user.id;
+  const result = await Chat.deleteMany({ userId });
+
+  if (result.deletedCount === 0) {
+    return NextResponse.json({
+      message: "No chats found to delete",
+    });
+  }
+  return NextResponse.json({
+    message: "chats deleted successfully",
+    deleted: result.deletedCount,
+  });
+}

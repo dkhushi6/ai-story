@@ -9,18 +9,21 @@ const LeftPannel = ({
   handleSubmitClick,
 }: MessagePropType) => {
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-screen">
       {/* Scrollable Message Area */}
       <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {messages
           .filter((msg) => msg.role === "user")
           .map((message) => (
-            <div key={message.id} className="flex items-start gap-3">
+            <div
+              key={message.id}
+              className="flex items-start justify-end gap-3"
+            >
               {/* Avatar */}
               <div className="flex-shrink-0">
                 <div
-                  className="w-8 h-8 p-1 rounded-full bg-gradient-to-brbg-[#393028] dark:bg-[#ffe0c2]  dark:text-black
- text-white flex items-center justify-center font-bold shadow-md"
+                  className="w-8 h-8 p-1 rounded-full  dark:bg-[#ffe0c2]  dark:text-black
+ text-white flex items-center justify-center font-bold shadow-md bg-[#393028]"
                 >
                   <UserRound className="w-5" />
                 </div>
@@ -51,7 +54,7 @@ const LeftPannel = ({
       </div>
 
       {/* Sticky Input at Bottom */}
-      <form className="sticky bottom-0  p-4 border-t bg-muted rounded-2xl border-muted mb-19    ">
+      <form className="sticky bottom-0 p-4 bg-muted border-t border-gray-200 dark:border-muted shadow-md rounded-t-2xl ">
         <div className="flex items-center gap-2 px-4 py-2 ">
           <input
             type="text"
@@ -69,8 +72,7 @@ const LeftPannel = ({
 
           <button
             type="submit"
-            className="p-2 rounded-lg bg-gradient-to-br fbg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black
- hover:opacity-90 transition-all"
+            className="p-2 rounded-lg bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black hover:opacity-90 transition-all"
             aria-label="Send message"
             onClick={(e) => {
               e.preventDefault();

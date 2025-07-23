@@ -4,7 +4,6 @@ import "./globals.css";
 import SessionWrapper from "@/components/sessionWrapper";
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "next-themes";
-import { Footer } from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,8 +33,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionWrapper>
             <Navbar />
-            {children}
-            <Footer />
+            {children}]{" "}
           </SessionWrapper>
         </ThemeProvider>
       </body>
