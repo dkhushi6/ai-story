@@ -1,6 +1,7 @@
 import { auth } from "@/app/auth";
 import { connectDB } from "@/lib/mdb/mdb-connection";
 import Chat from "@/lib/models/chatModel";
+import { ObjectId } from "bson";
 import { NextRequest, NextResponse } from "next/server";
 //fetch particular chat
 export async function POST(req: NextRequest) {
@@ -12,9 +13,14 @@ export async function POST(req: NextRequest) {
   }
   const userId = session.user.id;
   const { chatId } = body;
+  console.log("userid", userId);
+  console.log("chatid", chatId);
 
-  if (!chatId) {
-    return NextResponse.json({ message: "chat id not found" });
+  if (!chatId || !ObjectId.isValid(chatId)) {
+    return NextResponse.json(
+      { message: "Invalid or missing chat ID" },
+      { status: 400 }
+    );
   }
   const existingChat = await Chat.findOne({ _id: chatId, userId });
   if (existingChat) {

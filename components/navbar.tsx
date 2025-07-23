@@ -8,14 +8,20 @@ import React from "react";
 import { HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import { Button } from "./ui/button";
 import ThemeSwitcher from "./theme/theme-switcher";
+import { Sparkles } from "lucide-react";
 
 const Navbar = () => {
   const { data: session } = useSession();
 
   return (
-    <nav className="w-full px-6 py-4 border-b shadow-sm bg-white dark:bg-black flex items-center justify-between">
+    <nav className="w-full px-6 py-4 border-b shadow-sm  flex items-center justify-between">
       <Link href="/" className="text-xl font-bold tracking-wide">
-        AI-STORY
+        <div className="flex items-center space-x-2">
+          <Sparkles className="h-7 w-7 text-primary glow-icon animate-pulse" />
+          <h1 className="text-2xl font-semibold text-foreground glow-text">
+            AI-Story
+          </h1>
+        </div>{" "}
       </Link>
       <div className="flex gap-5">
         <div>

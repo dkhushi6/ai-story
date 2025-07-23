@@ -5,6 +5,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
+import SparklesComp from "./extra/sparkles";
 
 const Hero = () => {
   const [prompt, setPrompt] = useState("");
@@ -19,32 +20,37 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-white via-purple-100 to-fuchsia-100 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-900 flex items-center justify-center px-4 py-20 transition-colors duration-500">
+    <section className="min-h-screen flex items-center justify-center px-4 py-20 transition-colors duration-500">
+      <div>
+        <SparklesComp />
+      </div>
       <div className="max-w-4xl mx-auto text-center">
         {/* Main Quote */}
-        <h1 className="font-playfair text-5xl md:text-7xl font-bold text-zinc-900 dark:text-white mb-12 leading-tight">
+        <h1 className="font-playfair text-5xl md:text-7xl font-bold text-zinc-900 dark:text-white mb-12 leading-tight tracking-tight">
           Stories spark wonder —<br />
-          <span className="text-fuchsia-600 dark:text-fuchsia-400">
-            let's create one together.
+          <span className="text-[#725C52] dark:text-[#ffe0c2] drop-shadow-sm">
+            let’s create one together.
           </span>
         </h1>
-
+        <p className="text-xl md:text-2xl text-muted-foreground font-inter font-light max-w-2xl mx-auto">
+          Just type an idea — we'll do the rest
+        </p>
         {/* Input Section */}
-        <div className="max-w-2xl mx-auto mb-8">
+        <div className="max-w-3xl mx-auto my-12">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col sm:flex-row gap-4 p-2 bg-white/40 dark:bg-zinc-800/50 backdrop-blur-md rounded-full border border-zinc-200 dark:border-white/20 shadow-inner"
+            className="flex flex-col sm:flex-row gap-5 p-4 bg-white/50 dark:bg-zinc-800/60 backdrop-blur-lg rounded-full border border-zinc-200 dark:border-white/20 shadow-xl transition-all duration-300"
           >
             <Input
               type="text"
               placeholder="Enter a story theme or idea (e.g. 'magic garden', 'space whale', 'robot school')..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-transparent border-none text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-white/50 rounded-full px-6 py-4 text-lg focus:ring-2 focus:ring-fuchsia-300 dark:focus:ring-fuchsia-600"
+              className="flex-1 bg-transparent border-none text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-white/50 rounded-full px-7 py-5 text-lg sm:text-xl focus:ring-2 focus:ring-[#393028] dark:focus:ring-[#ffe0c2] transition-all"
             />
             <Button
               type="submit"
-              className="bg-gradient-to-br from-purple-500 to-fuchsia-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-glow transition-all duration-300 hover:scale-105"
+              className="bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black px-9 py-5 rounded-full font-semibold text-lg sm:text-xl hover:shadow-glow hover:scale-105 transition-all duration-300"
             >
               <Sparkles className="w-5 h-5 mr-2" />
               Generate Story
