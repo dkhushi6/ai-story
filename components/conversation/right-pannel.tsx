@@ -1,15 +1,44 @@
-import { MessagePropType } from "@/app/features/message-type";
+"use client";
 import { Message } from "ai";
-import React from "react";
+import React, { useEffect, useState } from "react";
 type MessageProp = {
   messages: Message[];
+  imageLoading: boolean;
+  hasGeneratedImage: boolean;
+  imageUrl?: { base64Data: string; mimeType: string };
+  setImageLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
-const RightPannel = ({ messages }: MessageProp) => {
+const RightPannel = ({
+  messages,
+  imageUrl,
+  setImageLoading,
+  imageLoading,
+  hasGeneratedImage,
+}: MessageProp) => {
   return (
     <div className="flex flex-col items-center h-full w-full mx-auto px-6 py-4">
       {/* Story Image */}
-      <div className="w-full h-80 mb-4 rounded-t-2xl bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black flex items-center justify-center text-3xl font-bold ">
-        📖
+      <div className="relative w-full h-80 mb-4 rounded-2xl overflow-hidden border border-border bg-[#393028] dark:bg-[#ffe0c2] flex items-center justify-center">
+        {imageUrl ? (
+          <>
+            {imageLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary" />
+              </div>
+            )}
+            <img
+              src={`data:${imageUrl.mimeType};base64,${imageUrl.base64Data}`}
+              alt="generated"
+              className="w-full h-full object-cover transition-opacity duration-300"
+              onLoad={() => setImageLoading(false)}
+              style={{ opacity: imageLoading ? 0 : 1 }}
+            />
+          </>
+        ) : (
+          <div className="text-5xl font-bold text-white dark:text-black">
+            📖
+          </div>
+        )}
       </div>
       <div className="flex-1 w-full overflow-y-auto space-y-6">
         {messages

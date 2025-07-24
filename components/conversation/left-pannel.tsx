@@ -1,5 +1,5 @@
 import { MessagePropType } from "@/app/features/message-type";
-import { Send, UserRound } from "lucide-react";
+import { Book, Send, UserRound } from "lucide-react";
 import React from "react";
 
 const LeftPannel = ({
@@ -7,6 +7,7 @@ const LeftPannel = ({
   input,
   handleInputChange,
   handleSubmitClick,
+  handleGenerateImage,
 }: MessagePropType) => {
   return (
     <div className="flex flex-col h-screen">
@@ -81,6 +82,18 @@ const LeftPannel = ({
             }}
           >
             <Send className="w-5 h-5" />
+          </button>
+          <button
+            type="submit"
+            className="p-2 rounded-lg bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black hover:opacity-90 transition-all"
+            aria-label="Send message"
+            onClick={(e) => {
+              e.preventDefault();
+
+              handleGenerateImage?.();
+            }}
+          >
+            <Book className="w-5 h-5" />
           </button>
         </div>
       </form>

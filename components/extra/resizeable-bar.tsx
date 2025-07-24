@@ -17,9 +17,14 @@ import LeftPannel from "../conversation/left-pannel";
 import RightPannel from "../conversation/right-pannel";
 import { handleSubmitClick } from "@/app/features/handleSubmitClick";
 import { handleReload } from "./handleReload";
-
+type ImageType = {
+  base64Data: string;
+  mimeType: string;
+};
 export function ResizableChat() {
   const [chatId, setChatId] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<ImageType | undefined>();
+  const [imageLoading, setImageLoading] = useState(false);
 
   const params = useParams();
   const id = params.id as string;
@@ -39,6 +44,25 @@ export function ResizableChat() {
         });
       },
     });
+
+  const handleGenerateImage = async () => {
+    if (messages[messages.length - 1].role !== "assistant") {
+      console.log(
+        "cannot generate image ...last msg is not from assistant but user"
+      );
+      return;
+    }
+    console.log("msg content", messages[messages.length - 1].content);
+
+    const res = await axios.post("/api/image", {
+      prompt: messages[messages.length - 1].content,
+    });
+    if (res.data.imageURL) {
+      setImageLoading(true);
+
+      setImageUrl(res.data.imageURL);
+    }
+  };
   //params id get n set
   useEffect(() => {
     if (!id || id === "new") {
@@ -82,6 +106,7 @@ export function ResizableChat() {
             handleSubmitClick({ chatId: chatId!, input, handleSubmit })
           }
           handleInputChange={handleInputChange}
+          handleGenerateImage={handleGenerateImage}
         />
       </ResizablePanel>
 
@@ -89,7 +114,12 @@ export function ResizableChat() {
 
       {/* Right Panel – AI Responses */}
       <ResizablePanel defaultSize={67}>
-        <RightPannel messages={messages} />
+        <RightPannel
+          imageLoading={imageLoading}
+          messages={messages}
+          imageUrl={imageUrl}
+          setImageLoading={setImageLoading}
+        />
       </ResizablePanel>
     </ResizablePanelGroup>
   );
