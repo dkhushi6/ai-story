@@ -89,8 +89,7 @@ const LeftPannel = ({
             aria-label="Send message"
             onClick={(e) => {
               e.preventDefault();
-
-              handleGenerateImage?.();
+              handleGenerateImage();
             }}
           >
             <Book className="w-5 h-5" />

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 type MessageProp = {
   messages: Message[];
   imageLoading: boolean;
-  hasGeneratedImage: boolean;
   imageUrl?: { base64Data: string; mimeType: string };
   setImageLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -13,13 +12,15 @@ const RightPannel = ({
   imageUrl,
   setImageLoading,
   imageLoading,
-  hasGeneratedImage,
 }: MessageProp) => {
+  useEffect(() => {
+    console.log("Received imageUrl in RightPannel:");
+  }, [imageUrl?.base64Data]);
   return (
     <div className="flex flex-col items-center h-full w-full mx-auto px-6 py-4">
       {/* Story Image */}
-      <div className="relative w-full h-80 mb-4 rounded-2xl overflow-hidden border border-border bg-[#393028] dark:bg-[#ffe0c2] flex items-center justify-center">
-        {imageUrl ? (
+      <div className="relative w-full h-100 mb-4 rounded-2xl overflow-hidden border border-border bg-[rgb(57,48,40)] dark:bg-[#ffe0c2] flex items-center justify-center">
+        {imageUrl?.base64Data && imageUrl?.mimeType ? (
           <>
             {imageLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-background z-10">

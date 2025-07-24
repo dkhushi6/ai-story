@@ -11,5 +11,8 @@ export type MessagePropType = {
 
 export type ReloadType = {
   setConvo: React.Dispatch<React.SetStateAction<Message[]>>;
+  setImageUrl: React.Dispatch<
+    React.SetStateAction<{ base64Data: string; mimeType: string } | undefined>
+  >;
   id: string;
 };

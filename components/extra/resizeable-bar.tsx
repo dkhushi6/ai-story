@@ -10,7 +10,7 @@ import { Send, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import axios from "axios";
-import { generateId, Message } from "ai";
+import { Message } from "ai";
 import { useParams } from "next/navigation";
 import { ObjectId } from "bson";
 import LeftPannel from "../conversation/left-pannel";
@@ -57,10 +57,28 @@ export function ResizableChat() {
     const res = await axios.post("/api/image", {
       prompt: messages[messages.length - 1].content,
     });
-    if (res.data.imageURL) {
+    if (res.data.imageUrl) {
       setImageLoading(true);
 
-      setImageUrl(res.data.imageURL);
+      setImageUrl(res.data.imageUrl);
+    }
+    //saving the url generated
+    if (!chatId) {
+      console.log("chatid not found");
+    }
+    console.log("Image URL data:", res.data.imageUrl);
+
+    const response = await axios.post("/api/fetch-image/save-image", {
+      id: chatId,
+      imageUrl: res.data.imageUrl,
+    });
+
+    console.log(response.data);
+    if (response.data.status === "ok") {
+      setImageUrl(res.data.imageUrl);
+      console.log("image saved successfully");
+    } else {
+      console.error("failed to save image");
     }
   };
   //params id get n set
@@ -73,9 +91,9 @@ export function ResizableChat() {
     } else {
       setChatId(id);
     }
-    if (id || id !== "new") {
+    if (id && id !== "new") {
       const handleFetchReload = async () => {
-        await handleReload({ id, setConvo });
+        await handleReload({ id, setConvo, setImageUrl });
       };
       handleFetchReload();
     }

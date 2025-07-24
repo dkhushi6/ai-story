@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ message: "existing chat not found" });
 }
 
-//fetch all chats of user
+//fetch all chats and image of user
 export async function GET(req: NextRequest) {
   await connectDB();
   const session = await auth();

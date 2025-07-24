@@ -12,6 +12,12 @@ const chatSchema = new mongoose.Schema({
       required: true,
     },
   ],
+  imageUrl: [
+    {
+      base64Data: String,
+      mimeType: String,
+    },
+  ],
 });
 
 export default mongoose.models.Chat || mongoose.model("Chat", chatSchema);

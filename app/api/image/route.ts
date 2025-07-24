@@ -19,7 +19,12 @@ export async function POST(req: NextRequest) {
 
   for (const file of result.files) {
     if (file.mimeType.startsWith("image/")) {
-      return NextResponse.json({ imageURL: file });
+      return NextResponse.json({
+        imageUrl: {
+          base64Data: file.base64,
+          mimeType: file.mimeType,
+        },
+      });
     }
   }
 }

@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 const ChatHistory = () => {
   const router = useRouter();
   const [response, setResponse] = useState([]);
+  const [imageUrl, setImageUrl] = useState([]);
   useEffect(() => {
     localStorage.setItem("prompt", "");
 
@@ -67,7 +68,15 @@ const ChatHistory = () => {
                 >
                   {/* Header Image or Icon */}
                   <div className="w-full h-36 bg-muted flex items-center justify-center border-b border-muted">
-                    <MessageSquare className="w-8 h-8 text-muted-foreground group-hover:scale-110 transition-transform" />
+                    {chat.imageUrl?.[0]?.base64Data ? (
+                      <img
+                        src={`data:${chat.imageUrl[0].mimeType};base64,${chat.imageUrl[0].base64Data}`}
+                        alt="chat-thumbnail"
+                        className="w-full h-full object-cover  group-hover:scale-110 transition-transform"
+                      />
+                    ) : (
+                      <MessageSquare className="w-8 h-8 text-muted-foreground" />
+                    )}
                   </div>
                   {/* Content */}
                   <div className="p-4">
