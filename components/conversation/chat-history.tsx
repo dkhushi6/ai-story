@@ -46,14 +46,16 @@ const ChatHistory = () => {
       {/* Chat Grid */}
       {response.length > 0 ? (
         <div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pb-8">
             <h2 className="text-2xl font-semibold text-foreground">
               Recent Chats
             </h2>
-            <span className="text-sm text-muted-foreground">
-              {response.length} conversation{response.length !== 1 ? "s" : ""}
-            </span>
-            <Button onClick={handleClear}>Clear All</Button>
+            <div className="gap-5 flex items-center">
+              <span className="text-sm text-muted-foreground">
+                {response.length} conversation{response.length !== 1 ? "s" : ""}
+              </span>
+              <Button onClick={handleClear}>Clear All</Button>
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {response.map((chat: any, index: number) => (
