@@ -25,7 +25,7 @@ export function ResizableChat() {
   const [chatId, setChatId] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<ImageType | undefined>();
   const [imageLoading, setImageLoading] = useState(false);
-
+  const [count, setCount] = useState(0);
   const params = useParams();
   const id = params.id as string;
   const [convo, setConvo] = useState<Message[]>([]);
@@ -38,10 +38,11 @@ export function ResizableChat() {
           console.error("chatId missing");
         }
 
-        await axios.post("/api/fetch/save-chats", {
+        const res = await axios.post("/api/fetch/save-chats", {
           message,
           id: chatId,
         });
+        setCount(res.data.count);
       },
     });
 
@@ -93,7 +94,7 @@ export function ResizableChat() {
     }
     if (id && id !== "new") {
       const handleFetchReload = async () => {
-        await handleReload({ id, setConvo, setImageUrl });
+        await handleReload({ id, setConvo, setImageUrl, setCount });
       };
       handleFetchReload();
     }
@@ -125,6 +126,7 @@ export function ResizableChat() {
           }
           handleInputChange={handleInputChange}
           handleGenerateImage={handleGenerateImage}
+          count={count}
         />
       </ResizablePanel>
 

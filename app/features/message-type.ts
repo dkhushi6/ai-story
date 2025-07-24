@@ -7,6 +7,7 @@ export type MessagePropType = {
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSubmitClick: () => void;
   handleGenerateImage: () => void;
+  count: number;
 };
 
 export type ReloadType = {
@@ -15,4 +16,5 @@ export type ReloadType = {
     React.SetStateAction<{ base64Data: string; mimeType: string } | undefined>
   >;
   id: string;
+  setCount: React.Dispatch<React.SetStateAction<number>>;
 };

@@ -1,6 +1,7 @@
 import { auth } from "@/app/auth";
 import { connectDB } from "@/lib/mdb/mdb-connection";
 import Chat from "@/lib/models/chatModel";
+import { count } from "console";
 import { existsSync } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -18,9 +19,15 @@ export async function POST(req: NextRequest) {
   if (id && id !== "new") {
     const existingChat = await Chat.findOne({ _id: id, userId });
     if (existingChat) {
+      if (message.role === "assistant") {
+        existingChat.count = (existingChat.count || 0) + 1;
+      }
       existingChat.message.push(message);
       await existingChat.save();
-      return NextResponse.json({ chatId: existingChat._id });
+      return NextResponse.json({
+        chatId: existingChat._id,
+        count: existingChat.count,
+      });
     }
     const chat = await Chat.create({
       _id: id,

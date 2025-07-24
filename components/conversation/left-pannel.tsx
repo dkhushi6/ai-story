@@ -1,4 +1,5 @@
 import { MessagePropType } from "@/app/features/message-type";
+import { cn } from "@/lib/utils";
 import { Book, Send, UserRound } from "lucide-react";
 import React from "react";
 
@@ -8,6 +9,7 @@ const LeftPannel = ({
   handleInputChange,
   handleSubmitClick,
   handleGenerateImage,
+  count,
 }: MessagePropType) => {
   return (
     <div className="flex flex-col h-screen">
@@ -55,47 +57,47 @@ const LeftPannel = ({
       </div>
 
       {/* Sticky Input at Bottom */}
-      <form className="sticky bottom-0 p-4 bg-muted border-t border-gray-200 dark:border-muted shadow-md rounded-t-2xl ">
-        <div className="flex items-center gap-2 px-4 py-2 ">
-          <input
-            type="text"
-            value={input}
-            onChange={handleInputChange}
-            placeholder="Say something..."
-            className="flex-1 py-2 px-3 bg-transparent text-foreground placeholder-muted-foreground focus:outline-none"
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
+      <div className={cn("", count >= 3 ? "hidden" : "")}>
+        <form className="sticky bottom-0 p-4 bg-muted border-t border-gray-200 dark:border-muted shadow-md rounded-t-2xl ">
+          <div className="flex items-center gap-2 px-4 py-2 ">
+            <input
+              type="text"
+              value={input}
+              onChange={handleInputChange}
+              placeholder="Say something..."
+              className="flex-1 py-2 px-3 bg-transparent text-foreground placeholder-muted-foreground focus:outline-none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSubmitClick();
+                }
+              }}
+            />
+            <button
+              type="submit"
+              className="p-2 rounded-lg bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black hover:opacity-90 transition-all"
+              aria-label="Send message"
+              onClick={(e) => {
                 e.preventDefault();
                 handleSubmitClick();
-              }
-            }}
-          />
-
-          <button
-            type="submit"
-            className="p-2 rounded-lg bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black hover:opacity-90 transition-all"
-            aria-label="Send message"
-            onClick={(e) => {
-              e.preventDefault();
-
-              handleSubmitClick();
-            }}
-          >
-            <Send className="w-5 h-5" />
-          </button>
-          <button
-            type="submit"
-            className="p-2 rounded-lg bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black hover:opacity-90 transition-all"
-            aria-label="Send message"
-            onClick={(e) => {
-              e.preventDefault();
-              handleGenerateImage();
-            }}
-          >
-            <Book className="w-5 h-5" />
-          </button>
-        </div>
-      </form>
+              }}
+            >
+              <Send className="w-5 h-5" />
+            </button>
+            <button
+              type="submit"
+              className="p-2 rounded-lg bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black hover:opacity-90 transition-all"
+              aria-label="Send message"
+              onClick={(e) => {
+                e.preventDefault();
+                handleGenerateImage();
+              }}
+            >
+              <Book className="w-5 h-5" />
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 "use client";
 import { Message } from "ai";
 import React, { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import { Download } from "lucide-react";
 type MessageProp = {
   messages: Message[];
   imageLoading: boolean;
@@ -19,7 +21,7 @@ const RightPannel = ({
   return (
     <div className="flex flex-col items-center h-full w-full mx-auto px-6 py-4">
       {/* Story Image */}
-      <div className="relative w-full h-100 mb-4 rounded-2xl overflow-hidden border border-border bg-[rgb(57,48,40)] dark:bg-[#ffe0c2] flex items-center justify-center">
+      <div className="relative group w-full h-100 mb-4 rounded-2xl overflow-hidden border border-border bg-[rgb(57,48,40)] dark:bg-[#ffe0c2] flex items-center justify-center">
         {imageUrl?.base64Data && imageUrl?.mimeType ? (
           <>
             {imageLoading && (
@@ -34,6 +36,22 @@ const RightPannel = ({
               onLoad={() => setImageLoading(false)}
               style={{ opacity: imageLoading ? 0 : 1 }}
             />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const link = document.createElement("a");
+                link.href = `data:${imageUrl.mimeType};base64,${imageUrl.base64Data}`;
+                const extension = imageUrl.mimeType.split("/")[1].split(";")[0]; // cleaner
+                link.download = `story-image.${extension}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity z-20"
+            >
+              <Download className="w-5 h-5" />
+            </Button>
           </>
         ) : (
           <div className="text-5xl font-bold text-white dark:text-black">

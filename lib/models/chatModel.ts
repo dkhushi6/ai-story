@@ -18,6 +18,10 @@ const chatSchema = new mongoose.Schema({
       mimeType: String,
     },
   ],
+  count: {
+    type: Number,
+    default: 0,
+  },
 });
 
 export default mongoose.models.Chat || mongoose.model("Chat", chatSchema);
