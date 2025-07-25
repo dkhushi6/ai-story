@@ -6,8 +6,7 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { useChat } from "@ai-sdk/react";
-import { Send, UserRound } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import { Message } from "ai";
@@ -17,7 +16,6 @@ import LeftPannel from "../conversation/left-pannel";
 import RightPannel from "../conversation/right-pannel";
 import { handleSubmitClick } from "@/app/features/handleSubmitClick";
 import { handleReload } from "./handleReload";
-import { toast } from "sonner";
 import { handleGenerateImage } from "@/app/features/handleGenerateImage";
 type ImageType = {
   base64Data: string;
@@ -27,6 +25,7 @@ export function ResizableChat() {
   const [chatId, setChatId] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<ImageType | undefined>();
   const [imageLoading, setImageLoading] = useState(false);
+
   const [count, setCount] = useState(0);
   const params = useParams();
   const id = params.id as string;
@@ -84,21 +83,13 @@ export function ResizableChat() {
       console.log("input prompt:", prompt);
       if (prompt) {
         setInput(prompt);
-        handleSubmitClick({
-          chatId: chatId ?? id!,
-          input: prompt,
-          handleSubmit,
-        });
       }
     };
     getPrompt();
   }, [chatId]);
 
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      className="h-screen rounded-lg border"
-    >
+    <ResizablePanelGroup direction="horizontal" className="  rounded-lg border">
       {/* Left Panel – User Messages */}
       <ResizablePanel defaultSize={33} minSize={20} maxSize={50}>
         <LeftPannel

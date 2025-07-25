@@ -30,7 +30,6 @@ export const handleGenerateImage = async ({
     });
 
     if (res.data.imageUrl) {
-      setImageLoading(true);
       setImageUrl(res.data.imageUrl);
     } else {
       console.warn("No image URL returned from /api/image.");

@@ -33,8 +33,10 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SessionWrapper>
-            <Navbar />
-            <main>{children} </main>
+            <div className="flex flex-col ">
+              <Navbar />
+              <main>{children} </main>
+            </div>
             <Toaster />
           </SessionWrapper>
         </ThemeProvider>

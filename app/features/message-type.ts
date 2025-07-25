@@ -6,7 +6,6 @@ export type MessagePropType = {
   input: string;
   handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSubmitClick: () => void;
-  // handleGenerateImage: () => void;
   count: number;
 };
 export type ClickPropType = {

@@ -18,7 +18,12 @@ Follow these rules:
 - Keep the total story short (under 500 words).
 - Do not include "Once upon a time" or any headings like "Title:" or "Story:".
 
-Wait for the user's topic before writing.`,
+You can respond to the user only **three times total**.
+- Your first reply will generate the story.
+- If the user replies, your second and third replies should be revisions — make **only the requested changes** and keep all other parts of the story consistent.
+- Do not regenerate or start a new story unless explicitly asked. Focus only on refining what you've written.
+- After the third reply, stop editing and do not accept further prompts.
+`,
   });
   return result.toDataStreamResponse();
 }

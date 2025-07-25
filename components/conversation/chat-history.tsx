@@ -8,7 +8,6 @@ import { Button } from "../ui/button";
 const ChatHistory = () => {
   const router = useRouter();
   const [response, setResponse] = useState([]);
-  const [imageUrl, setImageUrl] = useState([]);
   useEffect(() => {
     localStorage.setItem("prompt", "");
 
