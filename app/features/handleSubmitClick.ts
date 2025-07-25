@@ -1,10 +1,7 @@
 import { generateId } from "ai";
 import axios from "axios";
-type ClickPropType = {
-  chatId: string;
-  input: string;
-  handleSubmit: () => void | Promise<void>;
-};
+import { ClickPropType } from "./message-type";
+
 // saving chats
 export const handleSubmitClick = async ({
   chatId,

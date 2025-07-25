@@ -2,22 +2,19 @@
 import { Message } from "ai";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Download } from "lucide-react";
-type MessageProp = {
-  messages: Message[];
-  imageLoading: boolean;
-  imageUrl?: { base64Data: string; mimeType: string };
-  setImageLoading: React.Dispatch<React.SetStateAction<boolean>>;
-};
+import { Copy, Download } from "lucide-react";
+import { RightPannelProp } from "@/app/features/message-type";
+
 const RightPannel = ({
   messages,
   imageUrl,
   setImageLoading,
   imageLoading,
-}: MessageProp) => {
+}: RightPannelProp) => {
   useEffect(() => {
     console.log("Received imageUrl in RightPannel:");
   }, [imageUrl?.base64Data]);
+
   return (
     <div className="flex flex-col items-center h-full w-full mx-auto px-6 py-4">
       {/* Story Image */}
@@ -76,6 +73,7 @@ const RightPannel = ({
               title = firstLine;
               body = rest.join("\n");
             }
+            const fullContent = title + "\n" + body;
 
             return (
               <div
@@ -84,9 +82,19 @@ const RightPannel = ({
               >
                 {/* Content */}
                 <div className="p-6 space-y-4">
-                  <h2 className="text-2xl font-bold text-foreground">
-                    {title || "Untitled"}
-                  </h2>
+                  <div className="flex items-center justify-between gap-2">
+                    <h2 className="text-2xl font-bold text-foreground">
+                      {title || "Untitled"}
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => navigator.clipboard.writeText(fullContent)}
+                      className="text-muted-foreground"
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
                   <p className="text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
                     {body || message.content}
                   </p>

@@ -17,6 +17,8 @@ import LeftPannel from "../conversation/left-pannel";
 import RightPannel from "../conversation/right-pannel";
 import { handleSubmitClick } from "@/app/features/handleSubmitClick";
 import { handleReload } from "./handleReload";
+import { toast } from "sonner";
+import { handleGenerateImage } from "@/app/features/handleGenerateImage";
 type ImageType = {
   base64Data: string;
   mimeType: string;
@@ -33,6 +35,7 @@ export function ResizableChat() {
   const { messages, input, handleInputChange, handleSubmit, setInput } =
     useChat({
       initialMessages: convo,
+      //saving the reply from assistent
       onFinish: async (message) => {
         if (!chatId) {
           console.error("chatId missing");
@@ -43,45 +46,20 @@ export function ResizableChat() {
           id: chatId,
         });
         setCount(res.data.count);
+        if (chatId) {
+          handleGenerateImage({
+            msg: message,
+            count: res.data.count,
+            chatId,
+            setImageLoading,
+            setImageUrl,
+          });
+        } else {
+          console.error("Cant find chatId for GeneratingImage");
+        }
       },
     });
 
-  const handleGenerateImage = async () => {
-    if (messages[messages.length - 1].role !== "assistant") {
-      console.log(
-        "cannot generate image ...last msg is not from assistant but user"
-      );
-      return;
-    }
-    console.log("msg content", messages[messages.length - 1].content);
-
-    const res = await axios.post("/api/image", {
-      prompt: messages[messages.length - 1].content,
-    });
-    if (res.data.imageUrl) {
-      setImageLoading(true);
-
-      setImageUrl(res.data.imageUrl);
-    }
-    //saving the url generated
-    if (!chatId) {
-      console.log("chatid not found");
-    }
-    console.log("Image URL data:", res.data.imageUrl);
-
-    const response = await axios.post("/api/fetch-image/save-image", {
-      id: chatId,
-      imageUrl: res.data.imageUrl,
-    });
-
-    console.log(response.data);
-    if (response.data.status === "ok") {
-      setImageUrl(res.data.imageUrl);
-      console.log("image saved successfully");
-    } else {
-      console.error("failed to save image");
-    }
-  };
   //params id get n set
   useEffect(() => {
     if (!id || id === "new") {
@@ -106,11 +84,16 @@ export function ResizableChat() {
       console.log("input prompt:", prompt);
       if (prompt) {
         setInput(prompt);
-        handleSubmit();
+        handleSubmitClick({
+          chatId: chatId ?? id!,
+          input: prompt,
+          handleSubmit,
+        });
       }
     };
     getPrompt();
-  }, []);
+  }, [chatId]);
+
   return (
     <ResizablePanelGroup
       direction="horizontal"
@@ -125,7 +108,6 @@ export function ResizableChat() {
             handleSubmitClick({ chatId: chatId!, input, handleSubmit })
           }
           handleInputChange={handleInputChange}
-          handleGenerateImage={handleGenerateImage}
           count={count}
         />
       </ResizablePanel>

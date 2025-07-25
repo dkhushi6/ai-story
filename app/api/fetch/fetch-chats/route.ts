@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     });
   }
   const userId = session.user.id;
-  const userChats = await Chat.find({ userId });
+  const userChats = await Chat.find({ userId }).sort({ updatedAt: -1 });
   if (!userChats) {
     return NextResponse.json({
       message: "user chats not found",

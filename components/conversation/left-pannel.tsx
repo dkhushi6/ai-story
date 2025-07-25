@@ -1,16 +1,23 @@
+"use client";
 import { MessagePropType } from "@/app/features/message-type";
 import { cn } from "@/lib/utils";
 import { Book, Send, UserRound } from "lucide-react";
-import React from "react";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 const LeftPannel = ({
   messages,
   input,
   handleInputChange,
   handleSubmitClick,
-  handleGenerateImage,
   count,
 }: MessagePropType) => {
+  useEffect(() => {
+    console.log("count in left pannel:", count);
+    if (count >= 3) {
+      toast.success("Your chat limit is over");
+    }
+  }, [count]);
   return (
     <div className="flex flex-col h-screen">
       {/* Scrollable Message Area */}
@@ -83,17 +90,6 @@ const LeftPannel = ({
               }}
             >
               <Send className="w-5 h-5" />
-            </button>
-            <button
-              type="submit"
-              className="p-2 rounded-lg bg-[#393028] dark:bg-[#ffe0c2] text-white dark:text-black hover:opacity-90 transition-all"
-              aria-label="Send message"
-              onClick={(e) => {
-                e.preventDefault();
-                handleGenerateImage();
-              }}
-            >
-              <Book className="w-5 h-5" />
             </button>
           </div>
         </form>
