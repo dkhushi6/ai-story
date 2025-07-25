@@ -13,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, user }) {
       // Ensure MongoDB user ID (_id) is included
       session.user.id = user.id; // user.id is actually the MongoDB _id
       return session;

@@ -86,7 +86,7 @@ export function ResizableChat() {
       }
     };
     getPrompt();
-  }, [chatId]);
+  }, [chatId, setInput]);
 
   return (
     <ResizablePanelGroup direction="horizontal" className="  rounded-lg border">

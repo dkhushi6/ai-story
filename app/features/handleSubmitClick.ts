@@ -20,7 +20,7 @@ export const handleSubmitClick = async ({
     content: input,
   };
   try {
-    const res = await axios.post("/api/fetch/save-chats", {
+    await axios.post("/api/fetch/save-chats", {
       message: userMsgFormate,
       id: chatId,
     });

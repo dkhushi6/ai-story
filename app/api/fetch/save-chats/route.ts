@@ -1,8 +1,6 @@
 import { auth } from "@/app/auth";
 import { connectDB } from "@/lib/mdb/mdb-connection";
 import Chat from "@/lib/models/chatModel";
-import { count } from "console";
-import { existsSync } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 //To edit existing chat or new chat
@@ -21,14 +19,28 @@ export async function POST(req: NextRequest) {
     if (existingChat) {
       if (message.role === "assistant") {
         existingChat.count = (existingChat.count || 0) + 1;
+
+        const lastIndex = [...existingChat.message]
+          .reverse()
+          .findIndex((msg) => msg.role === "assistant");
+
+        if (lastIndex !== -1) {
+          const realIndex = existingChat.message.length - 1 - lastIndex;
+          existingChat.message[realIndex] = message;
+        } else {
+          existingChat.message.push(message);
+        }
+      } else {
+        existingChat.message.push(message);
       }
-      existingChat.message.push(message);
+
       await existingChat.save();
       return NextResponse.json({
         chatId: existingChat._id,
         count: existingChat.count,
       });
     }
+
     const chat = await Chat.create({
       _id: id,
       message,

@@ -1,18 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Wand2,
-  Image,
-  Edit3,
-  Download,
-  BookOpen,
-  Palette,
-  Sparkles,
-  Copy,
-  History,
-  Moon,
-  Zap,
-  Heart,
-} from "lucide-react";
+import { Wand2, Image, Edit3, Download, History, Moon } from "lucide-react";
 
 export const Features = () => {
   const features = [

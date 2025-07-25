@@ -1,6 +1,6 @@
-import { generateText, streamText } from "ai";
+import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -21,7 +21,7 @@ Follow these rules:
 You can respond to the user only **three times total**.
 - Your first reply will generate the story.
 - If the user replies, your second and third replies should be revisions — make **only the requested changes** and keep all other parts of the story consistent.
-- Do not regenerate or start a new story unless explicitly asked. Focus only on refining what you've written.
+- Do not regenerate or start a new story just modify the previous response. Focus only on refining what you've written.
 - After the third reply, stop editing and do not accept further prompts.
 `,
   });

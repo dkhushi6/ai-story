@@ -1,7 +1,7 @@
 "use client";
 import { MessagePropType } from "@/app/features/message-type";
 import { cn } from "@/lib/utils";
-import { Book, Send, UserRound } from "lucide-react";
+import { Send, UserRound } from "lucide-react";
 import React, { useEffect } from "react";
 import { toast } from "sonner";
 

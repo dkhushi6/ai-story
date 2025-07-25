@@ -1,6 +1,5 @@
 "use client";
-import { Message } from "ai";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button } from "../ui/button";
 import { Copy, Download } from "lucide-react";
 import { RightPannelProp } from "@/app/features/message-type";
@@ -14,6 +13,25 @@ const RightPannel = ({
   useEffect(() => {
     console.log("Received imageUrl in RightPannel:");
   }, [imageUrl?.base64Data]);
+
+  const lastAssistantMessage = [...messages]
+    .slice()
+    .reverse()
+    .find((msg) => msg.role === "assistant");
+
+  let title = "";
+  const body = "";
+
+  if (lastAssistantMessage?.parts && lastAssistantMessage.parts.length > 0) {
+    const allTextParts = lastAssistantMessage.parts
+      .filter((part) => part.type === "text")
+      .map((part) => part.text)
+      .join("\n");
+    const firstLine = allTextParts.split("\n")[0];
+    title = firstLine.trim();
+  }
+
+  const fullContent = title + "\n" + body;
 
   return (
     <div className="flex flex-col items-center h-full w-full mx-auto px-6 py-4">
@@ -57,51 +75,31 @@ const RightPannel = ({
         )}
       </div>
       <div className="flex-1 w-full overflow-y-auto space-y-6">
-        {messages
-          .filter((msg) => msg.role === "assistant")
-          .map((message) => {
-            let title = "";
-            let body = "";
-
-            if (message.parts && message.parts.length > 0) {
-              const allTextParts = message.parts
-                .filter((part) => part.type === "text")
-                .map((part) => part.text)
-                .join("\n");
-
-              const [firstLine, ...rest] = allTextParts.split("\n");
-              title = firstLine;
-              body = rest.join("\n");
-            }
-            const fullContent = title + "\n" + body;
-
-            return (
-              <div
-                key={message.id}
-                className="w-full   overflow-hidden shadow-lg "
-              >
-                {/* Content */}
-                <div className="p-6 space-y-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <h2 className="text-2xl font-bold text-foreground">
-                      {title || "Untitled"}
-                    </h2>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => navigator.clipboard.writeText(fullContent)}
-                      className="text-muted-foreground"
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                  </div>
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
-                    {body || message.content}
-                  </p>
-                </div>
+        {lastAssistantMessage && (
+          <div
+            key={lastAssistantMessage.id}
+            className="w-full overflow-hidden shadow-lg"
+          >
+            <div className="p-6 space-y-4">
+              <div className="flex items-center justify-between gap-2">
+                <h2 className="text-2xl font-bold text-foreground">
+                  {title || "Untitled"}
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => navigator.clipboard.writeText(fullContent)}
+                  className="text-muted-foreground"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
               </div>
-            );
-          })}
+              <p className="text-sm leading-relaxed whitespace-pre-wrap text-muted-foreground">
+                {body || lastAssistantMessage.content}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

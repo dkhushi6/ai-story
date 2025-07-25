@@ -1,18 +1,15 @@
-import { Message } from "ai";
 import axios from "axios";
-import { toast } from "sonner";
 import { GenerateImageTypeProps } from "./message-type";
 
 export const handleGenerateImage = async ({
   msg,
   count,
-  setImageLoading,
   setImageUrl,
   chatId,
 }: GenerateImageTypeProps) => {
   console.log("GEneratedimg count:", count);
   if (count > 1) {
-    toast.success("story image can only be generated once in a chat");
+    console.log("image can only be generated once");
     return;
   }
   try {

@@ -1,7 +1,6 @@
 import { auth } from "@/app/auth";
 import { connectDB } from "@/lib/mdb/mdb-connection";
 import Chat from "@/lib/models/chatModel";
-import { existsSync } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 //To save existing chat or new chat image

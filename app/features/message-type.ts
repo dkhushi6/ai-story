@@ -38,3 +38,12 @@ export type RightPannelProp = {
   imageUrl?: { base64Data: string; mimeType: string };
   setImageLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
+export type Chat = {
+  _id: string;
+  name?: string;
+  updatedAt?: string;
+  imageUrl?: {
+    base64Data: string;
+    mimeType: string;
+  }[];
+};

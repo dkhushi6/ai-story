@@ -4,10 +4,11 @@ import { MessageSquare } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { Chat } from "@/app/features/message-type";
 
 const ChatHistory = () => {
   const router = useRouter();
-  const [response, setResponse] = useState([]);
+  const [response, setResponse] = useState<Chat[]>([]);
   useEffect(() => {
     localStorage.setItem("prompt", "");
 
@@ -36,7 +37,7 @@ const ChatHistory = () => {
     }
   };
   if (!response) {
-    return <p>loading</p>;
+    return;
   }
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 space-y-8">
@@ -57,7 +58,7 @@ const ChatHistory = () => {
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {response.map((chat: any, index: number) => (
+            {response.map((chat, index: number) => (
               <div
                 key={chat._id}
                 style={{ animationDelay: `${index * 80}ms` }}

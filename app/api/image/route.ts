@@ -1,4 +1,4 @@
-import { generateText, streamText } from "ai";
+import { generateText } from "ai";
 import { google } from "@ai-sdk/google";
 import { NextRequest, NextResponse } from "next/server";
 

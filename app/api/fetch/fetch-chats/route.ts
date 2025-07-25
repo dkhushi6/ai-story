@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 }
 
 //fetch all chats and image of user
-export async function GET(req: NextRequest) {
+export async function GET() {
   await connectDB();
   const session = await auth();
   if (!session?.user?.id) {

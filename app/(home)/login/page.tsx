@@ -4,14 +4,17 @@ import bgImg from "@/public/mountain.jpeg"; // Use your uploaded image
 
 export default function LoginPage() {
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
+    <div
+      className="relative  flex items-center justify-center"
+      style={{ height: "calc(100vh - 69px)" }}
+    >
       {/* Background Image */}
       <Image
         src={bgImg}
         alt="Background"
         fill
         priority
-        className="object-cover"
+        className="object-cover opacity-50"
       />
 
       {/* Overlay for dim effect */}

@@ -29,11 +29,11 @@ const Hero = () => {
         <h1 className="font-playfair text-5xl md:text-7xl font-bold text-zinc-900 dark:text-white mb-12 leading-tight tracking-tight">
           Stories spark wonder —<br />
           <span className="text-[#725C52] dark:text-[#ffe0c2] drop-shadow-sm">
-            let’s create one together.
+            let{"’"}s create one together.
           </span>
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground font-inter font-light max-w-2xl mx-auto">
-          Just type an idea — we'll do the rest
+          Just type an idea — we{"’"}ll do the rest
         </p>
         {/* Input Section */}
         <div className="max-w-3xl mx-auto my-12">
@@ -43,7 +43,7 @@ const Hero = () => {
           >
             <Input
               type="text"
-              placeholder="Enter a story theme or idea (e.g. 'magic garden', 'space whale', 'robot school')..."
+              placeholder="Enter a story theme or idea (e.g. magic garden, space whale, robot school)..."
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               className="flex-1 bg-transparent border-none text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-white/50 rounded-full px-7 py-5 text-lg sm:text-xl focus:ring-2 focus:ring-[#393028] dark:focus:ring-[#ffe0c2] transition-all"
