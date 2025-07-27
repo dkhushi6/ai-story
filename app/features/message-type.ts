@@ -47,3 +47,11 @@ export type Chat = {
     mimeType: string;
   }[];
 };
+export type Base64ImageProps = {
+  base64: string;
+  mimeType: string;
+  alt?: string;
+  className?: string;
+  width: number;
+  height: number;
+};

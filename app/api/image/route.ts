@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
     providerOptions: {
       google: { responseModalities: ["TEXT", "IMAGE"] },
     },
-    prompt: `Generate a dreamlike landscape image in a 16:9 aspect ratio that visually represents the main theme and emotional tone of the following story: ${prompt}. The image should capture the essence and key elements of the narrative in a surreal and artistic style.`,
+    prompt: `Generate a  landscape image in a 16:9 aspect ratio that visually represents the main theme and emotional tone of the following story: ${prompt}. The image should capture the essence and key elements of the narrative in a surreal and artistic style.`,
   });
 
   for (const file of result.files) {

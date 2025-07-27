@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Chat } from "@/app/features/message-type";
+import Base64Image from "../extra/base64Image";
 
 const ChatHistory = () => {
   const router = useRouter();
@@ -71,10 +72,13 @@ const ChatHistory = () => {
                   {/* Header Image or Icon */}
                   <div className="w-full h-36 bg-muted flex items-center justify-center border-b border-muted">
                     {chat.imageUrl?.[0]?.base64Data ? (
-                      <img
-                        src={`data:${chat.imageUrl[0].mimeType};base64,${chat.imageUrl[0].base64Data}`}
+                      <Base64Image
+                        base64={chat.imageUrl[0].base64Data}
+                        mimeType={chat.imageUrl[0].mimeType}
                         alt="chat-thumbnail"
-                        className="w-full h-full object-cover  group-hover:scale-110 transition-transform"
+                        width={400}
+                        height={144}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform"
                       />
                     ) : (
                       <MessageSquare className="w-8 h-8 text-muted-foreground" />

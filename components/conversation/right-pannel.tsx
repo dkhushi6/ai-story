@@ -1,8 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Copy, Download } from "lucide-react";
 import { RightPannelProp } from "@/app/features/message-type";
+import Image from "next/image";
 
 const RightPannel = ({
   messages,
@@ -13,6 +14,24 @@ const RightPannel = ({
   useEffect(() => {
     console.log("Received imageUrl in RightPannel:");
   }, [imageUrl?.base64Data]);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+
+  //image src
+  useEffect(() => {
+    if (imageUrl?.base64Data && imageUrl?.mimeType) {
+      const byteString = atob(imageUrl.base64Data);
+      const ab = new ArrayBuffer(byteString.length);
+      const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([ab], { type: imageUrl.mimeType });
+      const objectUrl = URL.createObjectURL(blob);
+      setImageSrc(objectUrl);
+
+      return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [imageUrl]);
 
   const lastAssistantMessage = [...messages]
     .slice()
@@ -20,15 +39,16 @@ const RightPannel = ({
     .find((msg) => msg.role === "assistant");
 
   let title = "";
-  const body = "";
+  let body = "";
 
   if (lastAssistantMessage?.parts && lastAssistantMessage.parts.length > 0) {
     const allTextParts = lastAssistantMessage.parts
       .filter((part) => part.type === "text")
       .map((part) => part.text)
       .join("\n");
-    const firstLine = allTextParts.split("\n")[0];
+    const [firstLine, ...restLines] = allTextParts.split("\n");
     title = firstLine.trim();
+    body = restLines.join("\n").trim();
   }
 
   const fullContent = title + "\n" + body;
@@ -37,19 +57,21 @@ const RightPannel = ({
     <div className="flex flex-col items-center h-full w-full mx-auto px-6 py-4">
       {/* Story Image */}
       <div className="relative group w-full h-100 mb-4 rounded-2xl overflow-hidden border border-border bg-[rgb(57,48,40)] dark:bg-[#ffe0c2] flex items-center justify-center">
-        {imageUrl?.base64Data && imageUrl?.mimeType ? (
+        {imageUrl?.base64Data && imageUrl?.mimeType && imageSrc ? (
           <>
             {imageLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-primary" />
               </div>
             )}
-            <img
-              src={`data:${imageUrl.mimeType};base64,${imageUrl.base64Data}`}
+            <Image
+              src={imageSrc}
               alt="generated"
+              width={800}
+              height={400}
               className="w-full h-full object-cover transition-opacity duration-300"
-              onLoad={() => setImageLoading(false)}
               style={{ opacity: imageLoading ? 0 : 1 }}
+              onLoad={() => setImageLoading(false)}
             />
             <Button
               variant="ghost"
