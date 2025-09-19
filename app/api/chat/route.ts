@@ -1,12 +1,13 @@
 import { streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { NextRequest } from "next/server";
+import { google } from "@ai-sdk/google";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const { messages } = body;
   const result = streamText({
-    model: openai("gpt-4.1"),
+    model: google("gemini-2.5-pro"),
     messages,
     system: `You are an imaginative and poetic AI story writer. Your task is to write a dreamy, concise short story based on the given topic.
 
